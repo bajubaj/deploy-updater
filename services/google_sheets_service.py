@@ -3,24 +3,21 @@ import json
 import gspread
 from google.oauth2.service_account import Credentials
 import config
-import os
-import sys
 
-def get_google_sheets_client(service_account_path):
+def get_google_sheets_client():
     """Authenticates with Google Sheets and returns a client."""
     try:
+        creds_json_str = base64.b64decode(config.GOOGLE_SERVICE_ACCOUNT_B64).decode('utf-8')
+        creds_json = json.loads(creds_json_str)
+        
         scopes = [
             "https://www.googleapis.com/auth/spreadsheets",
             "https://www.googleapis.com/auth/drive"
         ]
         
-        creds = Credentials.from_service_account_file(service_account_path, scopes=scopes)
+        creds = Credentials.from_service_account_info(creds_json, scopes=scopes)
         client = gspread.authorize(creds)
         return client
-    except FileNotFoundError:
-        print(f"Error: `{service_account_path}` not found.")
-        print("Please make sure the service account file is in the same directory as the application.")
-        raise
     except Exception as e:
         print(f"Error authenticating with Google Sheets: {e}")
         raise

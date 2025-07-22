@@ -1,29 +1,15 @@
 from services import google_sheets_service, teamcity_service, jira_service
 import config
-import os
-import sys
+
 
 def main():
     """Main function to orchestrate the update process."""
     
     print("Starting Jira update process...")
-    
-    # --- Path handling for PyInstaller ---
-    # Determine the base path, which works for both development and a frozen .exe
-    if getattr(sys, 'frozen', False):
-        # If the application is run as a bundle, the PyInstaller bootloader
-        # extends the sys module by a flag frozen=True and sets the app 
-        # path into variable _MEIPASS'.
-        base_path = sys._MEIPASS
-    else:
-        base_path = os.path.dirname(os.path.abspath(__file__))
-
-    service_account_path = os.path.join(base_path, 'service_account.json')
-    # --- End Path handling ---
 
     # 1. Initialize Google Sheets client and get the worksheet
     try:
-        g_client = google_sheets_service.get_google_sheets_client(service_account_path)
+        g_client = google_sheets_service.get_google_sheets_client()
         sheet = g_client.open_by_key(config.GOOGLE_SHEET_ID).worksheet(config.GOOGLE_SHEET_NAME)
     except Exception as e:
         print(f"Failed to open Google Sheet. Aborting. Error: {e}")
