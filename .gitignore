@@ -1,0 +1,4 @@
+.env
+.venv/
+cursor_create_a_venv_with_genai_librari.md
+__pycache__/
